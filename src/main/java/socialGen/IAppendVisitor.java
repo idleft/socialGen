@@ -47,6 +47,8 @@ public interface IAppendVisitor {
 
     IAppendVisitor visit(DateTime datetime);
 
+    IAppendVisitor visit(Double sentiment);
+
     IAppendVisitor visit(Message message);
 
     IAppendVisitor visit(Point point);

@@ -1,6 +1,8 @@
 .DS_Store
 output/
 src/.DS_Store
+*.iml
+.idea/
 
 .metadata
 bin/

@@ -25,6 +25,7 @@ import java.util.Random;
 import java.util.StringTokenizer;
 
 import datatype.Message;
+import org.apache.commons.lang3.tuple.Pair;
 import utility.FileUtil;
 
 public class RandomMessageGenerator {
@@ -63,7 +64,7 @@ public class RandomMessageGenerator {
         setDeviceMsgGen(seed);
     }
 
-    public Message getNextRandomMessage(boolean needTopics) {
+    public Pair<Message, Double> getNextRandomMessage(boolean needTopics) {
         boolean msgType = rand.nextBoolean();
         if (msgType) { //service-related
             return serviceMsgGen.getNextRandomMessage(needTopics);
@@ -140,7 +141,7 @@ abstract class MessageTemplate {
         }
     }
 
-    public abstract Message getNextRandomMessage(boolean needTopics);
+    public abstract Pair<Message, Double> getNextRandomMessage(boolean needTopics);
 
     protected String getRandomFeelingVerb(boolean isPositive) {
         int rix = isPositive ? random.nextInt(positiveFeeling.size()) : random.nextInt(negativeFeeling.size());
@@ -236,9 +237,13 @@ class ServiceRelatedMessage extends MessageTemplate {
     }
 
     @Override
-    public Message getNextRandomMessage(boolean needTopics) {
+    public Pair<Message, Double> getNextRandomMessage(boolean needTopics) {
         boolean isPositive = random.nextBoolean();
         boolean isNoisy = (random.nextDouble()) < NOISE ? true : false;
+        Double sentiment = random.nextDouble();
+        if (!isPositive) {
+            sentiment = 0 - sentiment;
+        }
         double msgClass = random.nextDouble();
         String[] locVendor;
         if (msgClass < RARE) {
@@ -248,7 +253,7 @@ class ServiceRelatedMessage extends MessageTemplate {
         } else {
             locVendor = getFreqLocVendor();
         }
-        return getNextMessage(locVendor[0], locVendor[1], isPositive, isNoisy, needTopics);
+        return Pair.of(getNextMessage(locVendor[0], locVendor[1], isPositive, isNoisy, needTopics), sentiment);
     }
 
     private Message getNextMessage(String location, String vendor, boolean isPositive, boolean isNoisy,
@@ -372,9 +377,13 @@ class DeviceRelatedMessage extends MessageTemplate {
     }
 
     @Override
-    public Message getNextRandomMessage(boolean needTopics) {
+    public Pair<Message, Double> getNextRandomMessage(boolean needTopics) {
         boolean isPositive = random.nextBoolean();
         boolean isNoisy = (random.nextDouble()) < NOISE ? true : false;
+        double sentiment = random.nextDouble();
+        if(!isPositive) {
+            sentiment = 0 - sentiment;
+        }
         double msgClass = random.nextDouble();
         String[] devPart;
         if (msgClass < RARE) {
@@ -384,7 +393,7 @@ class DeviceRelatedMessage extends MessageTemplate {
         } else {
             devPart = getFreqDevPart();
         }
-        return getNextMessage(devPart[0], devPart[1], isPositive, isNoisy, needTopics);
+        return Pair.of(getNextMessage(devPart[0], devPart[1], isPositive, isNoisy, needTopics), sentiment);
     }
 
     private Message getNextMessage(String device, String part, boolean isPositive, boolean isNoisy,

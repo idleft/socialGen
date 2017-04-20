@@ -203,7 +203,7 @@ public class XMLUtil {
                     Long.parseLong(gBUserKeyMax), Long.parseLong(chirpUserKeyMin), Long.parseLong(chirpUserKeyMax),
                     Long.parseLong(gBookMsgKeyMin), Long.parseLong(gBookMsgKeyMax), Long.parseLong(chirpMsgKeyMin),
                     Long.parseLong(chirpMsgKeyMax), Integer.parseInt(avgMsgPerGBookUser),
-                    Integer.parseInt(avgMsgPerChirpUser), Long.parseLong(seed));
+                    1500, Long.parseLong(seed));
             PartitionConfiguration pc = new PartitionConfiguration(sp, tp);
             return pc;
         }

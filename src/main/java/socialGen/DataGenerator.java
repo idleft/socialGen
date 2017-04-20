@@ -17,6 +17,7 @@ package socialGen;
 import java.io.IOException;
 import java.util.Random;
 
+import org.apache.commons.lang3.tuple.Pair;
 import utility.FileAppender;
 import utility.FileUtil;
 import conf.PartitionConfiguration;
@@ -127,8 +128,10 @@ public class DataGenerator {
     private static void generateGBookMessages(GleambookUser user, FileAppender appender, int numMsg,
             IAppendVisitor visitor) throws IOException {
         Message message;
+        Pair<Message, Double> messageInfo;
         for (int i = 0; i < numMsg; i++) {
-            message = randMessageGen.getNextRandomMessage(false);
+            messageInfo = randMessageGen.getNextRandomMessage(false);
+            message = messageInfo.getLeft();
             Point location = randLocationGen.getRandomPoint();
             DateTime sendTime = randDateGen.getNextRandomDatetime();
             gBookMessage.reset(gBookMsgId++, user.getId(),
@@ -140,11 +143,15 @@ public class DataGenerator {
     private static void generateChirpMessages(ChirpUser user, FileAppender appender, long numMsg,
             IAppendVisitor visitor) throws IOException {
         Message message;
+        Pair<Message, Double> messageInfo;
+        Double sentiment;
         for (int i = 0; i < numMsg; i++) {
-            message = randMessageGen.getNextRandomMessage(true);
+            messageInfo = randMessageGen.getNextRandomMessage(true);
+            message = messageInfo.getLeft();
+            sentiment = messageInfo.getRight();
             Point location = randLocationGen.getRandomPoint();
             DateTime sendTime = randDateGen.getNextRandomDatetime();
-            chirpMessage.reset(chirpMsgId, user, location, sendTime, message.getReferredTopics(), message);
+            chirpMessage.reset(chirpMsgId, user, location, sendTime, message.getReferredTopics(), message, sentiment);
             chirpMsgId++;
             appender.appendToFile(visitor.reset().visit(chirpMessage).toString());
         }

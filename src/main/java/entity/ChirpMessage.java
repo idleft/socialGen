@@ -30,6 +30,7 @@ public class ChirpMessage {
     private DateTime sendTime;
     private List<String> referredTopics;
     private Message messageText;
+    private double sentiment;
 
     public ChirpMessage() {
 
@@ -46,13 +47,14 @@ public class ChirpMessage {
     }
 
     public void reset(long chirpId, ChirpUser user, Point senderLocation, DateTime sendTime,
-            List<String> referredTopics, Message messageText) {
+            List<String> referredTopics, Message messageText, double sentiment) {
         this.chirpId = chirpId;
         this.user = user;
         this.senderLocation = senderLocation;
         this.sendTime = sendTime;
         this.referredTopics = referredTopics;
         this.messageText = messageText;
+        this.sentiment = sentiment;
     }
 
     public String toString() {
@@ -64,6 +66,7 @@ public class ChirpMessage {
         visitor.append(", \"user\": ").visit(user);
         visitor.append(", \"sender_location\": ").visit(senderLocation);
         visitor.append(", \"send_time\": ").visit(sendTime);
+        visitor.append(", \"sentiment\": ").visit(sentiment);
         visitor.append(", \"referred_topics\": ").visit(referredTopics);
         visitor.append(", \"message_text\": ").visit(messageText);
         return visitor.append("}");
